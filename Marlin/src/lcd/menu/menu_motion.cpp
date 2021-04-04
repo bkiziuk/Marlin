@@ -149,7 +149,7 @@ void lcd_move_z() { _lcd_move_xyz(GET_TEXT(MSG_MOVE_Z), Z_AXIS); }
 
 screenFunc_t _manual_move_func_ptr;
 
-void _goto_manual_move(const float scale) {
+void _goto_manual_move(const_float_t scale) {
   ui.defer_status_screen();
   ui.manual_move.menu_scale = scale;
   ui.goto_screen(_manual_move_func_ptr);
@@ -189,7 +189,6 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
       sprintf_P(tmp, label, dtostrf(FINE_MANUAL_MOVE, 1, digs, numstr));
 
       #if DISABLED(HAS_GRAPHICAL_TFT)
-        extern const char NUL_STR[];
         SUBMENU_P(NUL_STR, []{ _goto_manual_move(float(FINE_MANUAL_MOVE)); });
         MENU_ITEM_ADDON_START(0 + ENABLED(HAS_MARLINUI_HD44780));
         lcd_put_u8str(tmp);
@@ -382,7 +381,7 @@ void menu_motion() {
   #elif HAS_LEVELING && DISABLED(SLIM_LCD_MENUS)
 
     #if DISABLED(PROBE_MANUALLY)
-      GCODES_ITEM(MSG_LEVEL_BED, PSTR("G28\nG29"));
+      GCODES_ITEM(MSG_LEVEL_BED, PSTR("G29N"));
     #endif
 
     if (all_axes_homed() && leveling_is_valid()) {
@@ -402,7 +401,7 @@ void menu_motion() {
   #endif
 
   #if ENABLED(Z_MIN_PROBE_REPEATABILITY_TEST)
-    GCODES_ITEM(MSG_M48_TEST, PSTR("G28 O\nM48 P10"));
+    GCODES_ITEM(MSG_M48_TEST, PSTR("G28O\nM48 P10"));
   #endif
 
   //
